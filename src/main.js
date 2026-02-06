@@ -331,7 +331,8 @@ gsap.to("#about h2, #about p", {
 
 // Staggered List Items (Experience, Education, Skills)
 // Note: Skills included here (Simple Stagger)
-gsap.utils.toArray('.experience-item, .education-item, .skill-tag').forEach(item => {
+// Staggered List Items (Experience, Education)
+gsap.utils.toArray('.experience-item, .education-item').forEach(item => {
   gsap.fromTo(item,
     { opacity: 0, y: 20 },
     {
@@ -345,6 +346,31 @@ gsap.utils.toArray('.experience-item, .education-item, .skill-tag').forEach(item
     }
   );
 });
+
+// Skills Animation: Tech Blur/Snap Reveal
+gsap.fromTo(".skill-tag",
+  {
+    autoAlpha: 0,
+    scale: 0.8,
+    filter: "blur(10px)",
+    y: 20
+  },
+  {
+    autoAlpha: 1,
+    scale: 1,
+    filter: "blur(0px)",
+    y: 0,
+    stagger: 0.05,
+    duration: 0.4,
+    ease: "back.out(1.7)", // "Snap" effect
+    scrollTrigger: {
+      trigger: ".skills-grid",
+      start: "top 85%",
+      end: "bottom 20%",
+      toggleActions: "play reverse play reverse" // Disappear on leave, Reappear on return
+    }
+  }
+);
 
 
 // 3D Tilt
