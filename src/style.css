@@ -1,0 +1,385 @@
+:root {
+  --bg-color: #0a0a0a;
+  --text-color: #ffffff;
+  --text-secondary: #888888;
+  --accent-color: #ffffff;
+  --section-spacing: 120px;
+  --transition-speed: 0.3s;
+  --font-main: 'Inter', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+  /* Hide default cursor for custom one */
+  position: relative;
+}
+
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity var(--transition-speed);
+  cursor: none;
+}
+
+a:hover {
+  opacity: 0.7;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 2rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  mix-blend-mode: difference;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links li a {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+/* Hero Section */
+.hero-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 5%;
+  position: relative;
+}
+
+#text-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  /* Allow clicks to pass through to buttons if needed, but we might want interaction */
+}
+
+.invisible-text {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-content h1 {
+  font-size: clamp(3rem, 10vw, 8rem);
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 3rem;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border: 1px solid var(--text-color);
+  border-radius: 50px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: all var(--transition-speed);
+  cursor: none;
+}
+
+.cta-button:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+/* Sections */
+/* Sections */
+.section-container {
+  padding: var(--section-spacing) 5%;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* GSAP will handle opacity and transform */
+  visibility: hidden;
+  /* Prevent FOUC before GSAP loads */
+}
+
+.section-title {
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  letter-spacing: 2px;
+}
+
+/* About & Profile */
+.profile-summary {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  line-height: 1.4;
+  max-width: 1000px;
+}
+
+.profile-summary p {
+  margin-bottom: 2rem;
+}
+
+/* Education */
+.education-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.education-item h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.education-item .institution {
+  color: var(--text-secondary);
+}
+
+/* Skills */
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.skill-tag {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  font-size: 0.9rem;
+  transition: border-color var(--transition-speed);
+}
+
+.skill-tag:hover {
+  border-color: var(--text-color);
+}
+
+/* Experience */
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.experience-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exp-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exp-header h3 {
+  font-size: 1.5rem;
+}
+
+.exp-header .company {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.exp-details {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.exp-details li {
+  margin-bottom: 0.5rem;
+}
+
+/* Projects */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 4rem;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform var(--transition-speed);
+  cursor: none;
+}
+
+.project-card:hover {
+  transform: translateY(-10px);
+}
+
+.project-card h3 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 1rem;
+}
+
+.project-card p {
+  color: var(--text-secondary);
+}
+
+/* Contact Footer */
+footer {
+  padding: var(--section-spacing) 5%;
+  background-color: #0f0f0f;
+}
+
+.footer-content h2 {
+  font-size: clamp(3rem, 8vw, 6rem);
+  margin-bottom: 4rem;
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 1.2rem;
+  margin-bottom: 4rem;
+}
+
+.copyright {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Custom Cursor */
+#cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  z-index: 9999;
+  transition: width 0.3s, height 0.3s;
+  display: none;
+}
+
+@media (pointer: fine) {
+  #cursor-follower {
+    display: block;
+  }
+}
+
+#cursor-follower.hover {
+  width: 50px;
+  height: 50px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+    /* Reset cursor on mobile */
+  }
+
+  a,
+  button,
+  .project-card,
+  .cta-button {
+    cursor: pointer;
+  }
+
+  #cursor-follower {
+    display: none;
+  }
+
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-color);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    z-index: 999;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+    z-index: 1001;
+  }
+}
