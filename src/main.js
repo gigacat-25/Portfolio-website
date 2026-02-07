@@ -84,7 +84,7 @@ class TextParticle {
     this.targetX = x;
     this.targetY = y;
     // Droplets vary more in size
-    this.size = Math.random() * 1.5 + 0.5;
+    this.size = Math.random() * 1.5 + 0.5; // Back to standard size to avoid blobs
     this.baseX = this.x;
     this.baseY = this.y;
     this.density = (Math.random() * 30) + 1;
@@ -103,11 +103,17 @@ class TextParticle {
   }
 
   draw() {
+    // Optimization: avoid string template creation every frame if possible, 
+    // or at least round values.
+    // Optimization: Use rect for small particles (faster than arc)
     textCtx.fillStyle = this.color;
-    textCtx.beginPath();
-    textCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    textCtx.closePath();
-    textCtx.fill();
+    if (this.size < 1) {
+      textCtx.fillRect(this.x, this.y, this.size * 2, this.size * 2);
+    } else {
+      textCtx.beginPath();
+      textCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      textCtx.fill();
+    }
   }
 
   update() {
@@ -155,35 +161,45 @@ function initTextParticles() {
   textCanvas.width = window.innerWidth;
   textCanvas.height = window.innerHeight;
 
-  textCtx.fillStyle = 'white';
-  const fontSize = Math.min(window.innerWidth / 10, 100);
-  textCtx.font = `700 ${fontSize}px Inter`;
-  textCtx.textAlign = 'center';
-  textCtx.textBaseline = 'middle';
+  const container = document.querySelector('.invisible-text');
+  if (!container) return;
 
-  const centerX = textCanvas.width / 2;
-  const centerY = textCanvas.height / 2;
+  const spans = container.querySelectorAll('span');
 
-  const textLines = ["Optimizing", "Digital", "Infrastructure"];
-  const lineHeight = fontSize * 1.2;
-  const totalHeight = textLines.length * lineHeight;
-  const startY = centerY - (totalHeight / 2) + (lineHeight / 2);
-
-  textLines.forEach((line, index) => {
-    textCtx.fillText(line, centerX, startY + (index * lineHeight));
-  });
-
-  const textCoordinates = textCtx.getImageData(0, 0, textCanvas.width, textCanvas.height);
-
+  // Clear context
   textCtx.clearRect(0, 0, textCanvas.width, textCanvas.height);
 
-  const step = 3;
-  for (let y = 0, y2 = textCoordinates.height; y < y2; y += step) {
-    for (let x = 0, x2 = textCoordinates.width; x < x2; x += step) {
-      if (textCoordinates.data[(y * 4 * textCoordinates.width) + (x * 4) + 3] > 128) {
-        if (Math.random() > 0.5) {
-          textParticles.push(new TextParticle(x, y));
-        }
+  spans.forEach(span => {
+    const rect = span.getBoundingClientRect();
+    const style = window.getComputedStyle(span);
+
+    // Match CSS font
+    const fontSize = parseFloat(style.fontSize);
+    const fontFamily = style.fontFamily;
+    const fontWeight = style.fontWeight;
+
+    textCtx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+    textCtx.fillStyle = 'white';
+    textCtx.textBaseline = 'top';
+    textCtx.textAlign = 'left';  // CSS is usually left-aligned in the flex col
+
+    // Draw text at the exact DOM position
+    // Note: rect.x and rect.y are relative to viewport, which matches fixed canvas
+    textCtx.fillText(span.innerText, rect.left, rect.top);
+  });
+
+  // Convert pixels to particles
+  const data = textCtx.getImageData(0, 0, textCanvas.width, textCanvas.height).data;
+  textCtx.clearRect(0, 0, textCanvas.width, textCanvas.height); // Clear after sampling
+
+  // Responsive density: "More particles"
+  // Gap 2 was too dense (blobs). Gap 3 is a better balance for mobile readability.
+  const gap = window.innerWidth < 768 ? 3 : 4;
+
+  for (let y = 0; y < textCanvas.height; y += gap) {
+    for (let x = 0; x < textCanvas.width; x += gap) {
+      if (data[(y * 4 * textCanvas.width) + (x * 4) + 3] > 128) {
+        textParticles.push(new TextParticle(x, y));
       }
     }
   }
@@ -205,7 +221,8 @@ const bgCtx = bgCanvas.getContext('2d');
 if (bgCanvas) bgCanvas.style.display = 'block';
 
 let bgParticles = [];
-const bgParticleCount = 150;
+// Optimization: Reduced background particle count
+const bgParticleCount = 50;
 
 function resizeBgCanvas() {
   bgCanvas.width = window.innerWidth;
@@ -289,17 +306,125 @@ function animateBgParticles() {
 }
 
 // Init All
+let resizeTimeout;
 window.addEventListener('resize', () => {
-  initTextParticles();
-  resizeBgCanvas();
-  initBgParticles();
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    if (window.innerWidth >= 768) {
+      initTextParticles();
+      // Resize might need restart of animation if it was stopped, 
+      // but simpler to just ensuring they run if they exist.
+      // Ideally we check if they are running. 
+      // For now, re-init is safe as it clears arrays.
+      // We need to ensure we don't start multiple loops.
+      // The simplest way for this script:
+      resizeBgCanvas();
+      initBgParticles();
+    } else {
+      // clear canvases if switching to mobile
+      const tc = document.getElementById('text-canvas');
+      const bc = document.getElementById('bg-canvas');
+      if (tc) {
+        const ctx = tc.getContext('2d');
+        ctx.clearRect(0, 0, tc.width, tc.height);
+      }
+      if (bc) {
+        const ctx = bc.getContext('2d');
+        ctx.clearRect(0, 0, bc.width, bc.height);
+      }
+      textParticles = [];
+      bgParticles = [];
+    }
+  }, 200);
 });
-setTimeout(() => {
-  initTextParticles();
-  animateTextParticles();
-  initBgParticles();
-  animateBgParticles();
-}, 500);
+
+// GitHub Stats Fetcher
+async function fetchGitHubStats() {
+  try {
+    const response = await fetch('https://api.github.com/users/gigacat-25');
+    if (!response.ok) throw new Error('GitHub API Failed');
+    const data = await response.json();
+    const repoCount = data.public_repos;
+
+    const statEl = document.getElementById('github-stat');
+    if (statEl) {
+      statEl.setAttribute('data-target', repoCount);
+      // Re-trigger animation for this element if needed, 
+      // or just let the IntersectionObserver catch it if it's currently 0
+      // Since this is async, the observer might have already run.
+      // Let's manually run the animation logic for this one element:
+      let startTimestamp = null;
+      const duration = 2000;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const current = Math.floor(progress * (repoCount - 0) + 0);
+        statEl.innerText = current + "+";
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        } else {
+          statEl.innerText = repoCount + "+";
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+  } catch (error) {
+    console.error('Error fetching GitHub stats:', error);
+    // Fallback or leave as 0+
+  }
+}
+
+// GitHub Contributions Fetcher
+async function fetchGitHubContributions() {
+  try {
+    const response = await fetch('https://github-contributions-api.jogruber.de/v4/gigacat-25');
+    if (!response.ok) throw new Error('GitHub Contrib API Failed');
+    const data = await response.json();
+
+    let total = 0;
+    if (data.total) {
+      // Sum up contributions from all years returned by the API
+      total = Object.values(data.total).reduce((acc, curr) => acc + curr, 0);
+    }
+
+    const statEl = document.getElementById('github-contrib-stat');
+    if (statEl && total > 0) {
+      statEl.setAttribute('data-target', total);
+      // Animate manually
+      let startTimestamp = null;
+      const duration = 2000;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const current = Math.floor(progress * (total - 0) + 0);
+        statEl.innerText = current + "+";
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        } else {
+          statEl.innerText = total + "+";
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+  } catch (error) {
+    console.error('Error fetching GitHub contribs:', error);
+  }
+}
+
+// Wait for fonts to be ready so text measurements are correct
+document.fonts.ready.then(() => {
+  // Only init particles on desktop
+  if (window.innerWidth >= 768) {
+    initTextParticles();
+    animateTextParticles();
+    initBgParticles();
+    animateBgParticles();
+  }
+
+  // Fetch GitHub Stats
+  fetchGitHubStats();
+  fetchGitHubContributions();
+});
 
 
 // --- OTHER ANIMATIONS ---
@@ -427,3 +552,43 @@ if (window.matchMedia("(pointer: fine)").matches) {
     el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
   });
 }
+
+// Stats Counter Animation
+gsap.utils.toArray('.stat-number').forEach(stat => {
+  const target = parseFloat(stat.getAttribute('data-target'));
+  const isFloat = stat.getAttribute('data-target').includes('.');
+  const suffix = stat.getAttribute('data-suffix') || "+";
+
+  // Create an object to tween
+  const counter = { val: 0 };
+
+  gsap.to(counter, {
+    val: target,
+    duration: 2,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: "#stats",
+      start: "top 80%",
+    },
+    onUpdate: () => {
+      // Update text with formatted number
+      if (isFloat) {
+        stat.innerText = counter.val.toFixed(1) + suffix;
+      } else {
+        stat.innerText = Math.round(counter.val) + suffix;
+      }
+    }
+  });
+});
+
+// Animate the text item (Cloud & Net) simply fading in
+gsap.from(".stat-text", {
+  opacity: 0,
+  y: 20,
+  duration: 1,
+  delay: 0.5,
+  scrollTrigger: {
+    trigger: "#stats",
+    start: "top 80%",
+  }
+});

@@ -153,12 +153,37 @@ nav.scrolled {
 
 /* Hero Section */
 .hero-section {
-  height: 100vh;
+  min-height: 100vh;
+  /* Allow it to grow if content is large */
   display: flex;
   flex-direction: column;
+  /* Mobile first: Column */
   justify-content: center;
-  padding: 0 5%;
   position: relative;
+  padding-top: 80px;
+  /* Navbar space */
+}
+
+/* Desktop Split Layout */
+@media (min-width: 1024px) {
+  .hero-section {
+    flex-direction: row;
+    /* Desktop: Row */
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10%;
+    /* More side padding */
+  }
+
+  .hero-content {
+    flex: 0 0 55%;
+    /* Take up 55% width */
+    max-width: 55%;
+    padding: 0;
+    text-align: left;
+    margin-bottom: 0;
+    /* Remove mobile margin if any */
+  }
 }
 
 #text-canvas {
@@ -169,24 +194,63 @@ nav.scrolled {
   height: 100%;
   z-index: 10;
   pointer-events: none;
-  /* Allow clicks to pass through to buttons if needed, but we might want interaction */
 }
 
 .invisible-text {
   opacity: 0;
   pointer-events: none;
+  /* Reduced margin to fit everything */
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .invisible-text {
+    opacity: 1;
+    /* Show text */
+    pointer-events: auto;
+    margin-bottom: 2rem;
+    /* Extra space on mobile to prevent overlap from particle spread */
+  }
+
+  #text-canvas,
+  #bg-canvas {
+    display: none;
+    /* Hide particles */
+  }
+
+  .hero-section {
+    padding-top: 100px;
+    /* More top padding for mobile */
+    justify-content: flex-start;
+    /* Align to top to avoid bottom squash */
+  }
+}
+
+.hero-content {
+  padding: 0 5%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 20;
+  /* Above canvas */
+  pointer-events: none;
+  /* Let clicks pass through if needed, but buttons need pointer-events: auto */
+}
+
+.hero-content>* {
+  pointer-events: auto;
 }
 
 .hero-content h1 {
   font-family: var(--font-heading);
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: clamp(2rem, 10vw, 6rem);
   font-weight: 700;
   line-height: 1.1;
   display: flex;
   flex-direction: column;
   margin-bottom: 1.5rem;
-  letter-spacing: -2px;
-  /* Tighter, more modern */
+  letter-spacing: -1px;
 }
 
 .hero-subtitle {
@@ -207,12 +271,138 @@ nav.scrolled {
   font-size: 0.9rem;
   letter-spacing: 1px;
   transition: all var(--transition-speed);
-  cursor: none;
+  cursor: pointer;
+  pointer-events: auto;
+  align-self: flex-start;
 }
 
 .cta-button:hover {
   background-color: var(--text-color);
   color: var(--bg-color);
+}
+
+/* Stats Strip & Block */
+.stats-container {
+  width: 100%;
+  padding: 2rem 5%;
+  background: linear-gradient(to bottom, rgba(5, 5, 5, 0), rgba(5, 5, 5, 0.9));
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  z-index: 20;
+  margin-top: auto;
+  /* Bottom anchor for mobile */
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  /* Fallback for very small screens */
+}
+
+/* Desktop Stats Block */
+@media (min-width: 1024px) {
+  .stats-container {
+    width: auto;
+    /* Auto width */
+    max-width: 40%;
+    margin-top: 0;
+    /* Reset margin */
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    /* Card look */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* 2x2 Grid */
+    gap: 2rem;
+    width: 100%;
+  }
+
+  /* Hide vertical dividers in grid mode */
+  .stat-divider {
+    display: none;
+  }
+
+  .stat-item {
+    text-align: left;
+    /* Align text left in grid */
+    padding: 0;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    /* Slightly smaller for grid */
+  }
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+  cursor: default;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+}
+
+.stat-item:hover .stat-number,
+.stat-item:hover .stat-text {
+  text-shadow: 0 0 15px rgba(0, 242, 234, 0.5);
+  /* Accent glow */
+}
+
+.stat-number,
+.stat-text {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .stat-divider {
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  }
+
+  .stat-item {
+    width: 100%;
+  }
 }
 
 /* Sections */
@@ -247,7 +437,8 @@ nav.scrolled {
 /* Education */
 .education-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* Fits mobile */
   gap: 2rem;
 }
 

@@ -44,6 +44,33 @@
         </p>
         <a href="#projects" class="cta-button">View Engineering Projects</a>
       </div>
+
+      <!-- Stats Strip (Moved inside Hero) -->
+      <div id="stats" class="stats-container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <h3 class="stat-number" id="github-contrib-stat" data-target="500">500+</h3>
+            <p class="stat-label">GitHub Contributions</p>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <h3 class="stat-number" data-target="99.9" data-suffix="%">0%</h3>
+            <p class="stat-label">Uptime Achieved</p>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <h3 class="stat-number" data-target="10">0+</h3>
+            <p class="stat-label">Events Managed (TEDx, Clubs)</p>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <a href="https://github.com/gigacat-25" target="_blank" style="text-decoration: none; display: block;">
+              <h3 class="stat-number" id="github-stat" data-target="0">0+</h3>
+              <p class="stat-label">GitHub Projects</p>
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="about" class="section-container">
@@ -83,24 +110,63 @@
       </div>
     </section>
 
+    <!-- Skills Section -->
     <section id="skills" class="section-container">
-      <h2 class="section-title">Skills</h2>
+      <h2 class="section-title">Technical Skills</h2>
+      <div class="skills-grid" style="margin-bottom: 2rem;">
+        <span class="skill-tag">Cloudflare (Zero Trust)</span>
+        <span class="skill-tag">Proxmox VE</span>
+        <span class="skill-tag">TrueNAS Core</span>
+        <span class="skill-tag">Docker & Containers</span>
+        <span class="skill-tag">Linux / SysAdmin</span>
+        <span class="skill-tag">Reverse Proxy</span>
+        <span class="skill-tag">Networking & Routing</span>
+        <span class="skill-tag">HTML/CSS/JS</span>
+      </div>
+      <h3 style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 1.2rem;">Languages</h3>
       <div class="skills-grid">
-        <span class="skill-tag">HTML5</span>
-        <span class="skill-tag">CSS</span>
-        <span class="skill-tag">JavaScript</span>
-        <span class="skill-tag">C</span>
-        <span class="skill-tag">Leadership</span>
-        <span class="skill-tag">Communication</span>
-        <span class="skill-tag">Critical Thinking</span>
-        <span class="skill-tag">Project Management</span>
-        <span class="skill-tag">AV Production</span>
+        <span class="skill-tag">English</span>
+        <span class="skill-tag">Tamil</span>
+        <span class="skill-tag">Kannada</span>
+        <span class="skill-tag">Hindi</span>
       </div>
     </section>
 
+    <!-- Experience Section -->
     <section id="experience" class="section-container">
       <h2 class="section-title">Experience & Activities</h2>
       <div class="experience-list">
+        <div class="experience-item">
+          <div class="exp-header">
+            <h3>Media and Production Lead</h3>
+            <span class="company">E-Cell ICEAS</span>
+            <span class="date">Jul 2025 - Jan 2026</span>
+          </div>
+          <ul class="exp-details">
+            <li>Led media initiatives and production workflows for the entrepreneurship cell.</li>
+          </ul>
+        </div>
+        <div class="experience-item">
+          <div class="exp-header">
+            <h3>AV Production Lead</h3>
+            <span class="company">TEDxICEAS</span>
+            <span class="date">Jan 2025 - Apr 2025</span>
+          </div>
+          <ul class="exp-details">
+            <li>Oversaw complete audio-video, lighting, and stage technical operations for TEDxICEAS 2025.</li>
+            <li>Managed on-ground AV crew and handled live troubleshooting.</li>
+          </ul>
+        </div>
+        <div class="experience-item">
+          <div class="exp-header">
+            <h3>Focus Head: Environment & Agriculture</h3>
+            <span class="company">Rotaract Club of Swarna Bengaluru</span>
+            <span class="date">Jul 2025 - Present</span>
+          </div>
+          <ul class="exp-details">
+            <li>Leading environmental initiatives and community projects.</li>
+          </ul>
+        </div>
         <div class="experience-item">
           <div class="exp-header">
             <h3>Audio & Video Production Lead</h3>
@@ -108,78 +174,87 @@
             <span class="date">Nov 2025</span>
           </div>
           <ul class="exp-details">
-            <li>Managed end-to-end lighting and sound operations for large-scale youth events.</li>
-            <li>Coordinated with performers and production teams to deliver seamless stage execution.</li>
-            <li>Earned “Create to Exist” and “Share Your Energy” badges.</li>
+            <li>Managed end-to-end lighting and sound operations.</li>
+            <li>Earned “Create to Exist” badge.</li>
           </ul>
-        </div>
-
-        <div class="experience-item">
-          <div class="exp-header">
-            <h3>AV Production Lead</h3>
-            <span class="company">TEDxICEAS</span>
-            <span class="date">Jan 2025 - April 2025</span>
-          </div>
-          <ul class="exp-details">
-            <li>Oversaw complete audio-video, lighting, and stage technical operations.</li>
-            <li>Managed on-ground AV crew and handled live troubleshooting.</li>
-          </ul>
-        </div>
-
-        <div class="experience-item">
-          <div class="exp-header">
-            <h3>Hackathon Winner</h3>
-            <span class="company">MINDHACK.AI - Project: ImpactOne Booking System</span>
-          </div>
         </div>
       </div>
     </section>
 
+    <!-- Projects Section -->
     <section id="projects" class="section-container">
-      <h2 class="section-title">Selected Projects</h2>
+      <h2 class="section-title">Featured Projects</h2>
       <div class="projects-grid">
-        <!-- Project 1 -->
-        <div class="project-card" data-tilt>
+        <!-- Project 1: Home Lab -->
+        <div class="project-card">
+          <div class="project-content">
+            <h3>Enterprise-Grade Home Lab</h3>
+            <p class="role-tag">Self-Hosted Infrastructure</p>
+            <div class="project-details">
+              <div class="detail-block">
+                <h4>Overview</h4>
+                <p>A comprehensive self-hosted stack running on <strong>Proxmox VE</strong> and
+                  <strong>TrueNAS</strong>. Hosting critical services like <strong>Immich</strong> (Photo Management),
+                  <strong>Jellyfin</strong> (Media), <strong>n8n</strong> (Automation), and <strong>Ollama</strong>
+                  (Local AI).
+                </p>
+              </div>
+              <div class="detail-block">
+                <h4>Security</h4>
+                <p>Secured with <strong>Cloudflare Zero Trust</strong> tunnels and Reverse Proxies for secure remote
+                  access without exposing ports.</p>
+              </div>
+            </div>
+            <div class="tech-stack">
+              <span>Proxmox</span>
+              <span>TrueNAS</span>
+              <span>Docker</span>
+              <span>Cloudflare</span>
+              <span>Linux</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2: Drones -->
+        <div class="project-card">
+          <div class="project-content">
+            <h3>High-Performance FPV Drones</h3>
+            <p class="role-tag">Hardware & Piloting</p>
+            <div class="project-details">
+              <div class="detail-block">
+                <h4>Build</h4>
+                <p>Custom-built high-speed FPV drones optimized for cinematic capture and technical maneuvers. Involves
+                  hardware tuning, electronic soldering, and flight controller configuration.</p>
+              </div>
+            </div>
+            <div class="tech-stack">
+              <span>Hardware Build</span>
+              <span>Betaflight</span>
+              <span>Electronics</span>
+              <span>Piloting</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3: Campus System -->
+        <div class="project-card">
           <div class="project-content">
             <h3>Campus Event Management System</h3>
             <p class="role-tag">Full Stack Developer</p>
-
             <div class="project-details">
               <div class="detail-block">
-                <h4>Problem</h4>
-                <p>University event coordination was fragmented across emails and paper forms, leading to scheduling
-                  conflicts and low student participation.</p>
-              </div>
-              <div class="detail-block">
-                <h4>Solution</h4>
-                <p>Designed a centralized booking authority platform with real-time automated approvals and a
-                  conflict-resolution engine.</p>
-              </div>
-              <div class="detail-block">
-                <h4>Result</h4>
-                <p>Reduced administrative scheduling time by <strong>40%</strong> and boosted event visibility, leading
-                  to a <strong>25% increase</strong> in student attendance.</p>
+                <h4>Impact</h4>
+                <p>Designed a centralized booking authority platform with real-time automated approvals. Reduced
+                  administrative scheduling time by <strong>40%</strong>.</p>
               </div>
             </div>
-
             <div class="tech-stack">
               <span>Node.js</span>
               <span>Express</span>
               <span>MongoDB</span>
-              <span>EJS</span>
             </div>
           </div>
         </div>
-        <article class="project-card">
-          <h3>Classic Enterprises Website</h3>
-          <p>Developed a professional website for a printing company to display services and streamline customer
-            inquiries.</p>
-        </article>
-        <article class="project-card">
-          <h3>ImpactOne Booking System</h3>
-          <p>Created a centralized booking system for college resources, including auditoriums and buses. Integrated
-            role-based access.</p>
-        </article>
       </div>
     </section>
   </main>
