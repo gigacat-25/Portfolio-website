@@ -22,6 +22,37 @@ navItems.forEach(item => {
   });
 });
 
+// Sticky Navigation & Scroll Spy
+const nav = document.querySelector('nav');
+const sections = document.querySelectorAll('section');
+const navLinksArr = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+  // Sticky Nav Style
+  if (window.scrollY > 50) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+
+  // Scroll Spy (Active Link)
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.clientHeight;
+    if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  navLinksArr.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href').includes(current)) {
+      link.classList.add('active');
+    }
+  });
+});
+
 // --- PARTICLE TEXT ASSEMBLY ENGINE ---
 const textCanvas = document.getElementById('text-canvas');
 const textCtx = textCanvas.getContext('2d', { willReadFrequently: true });
@@ -133,7 +164,7 @@ function initTextParticles() {
   const centerX = textCanvas.width / 2;
   const centerY = textCanvas.height / 2;
 
-  const textLines = ["Building", "Digital", "Excellence"];
+  const textLines = ["Optimizing", "Digital", "Infrastructure"];
   const lineHeight = fontSize * 1.2;
   const totalHeight = textLines.length * lineHeight;
   const startY = centerY - (totalHeight / 2) + (lineHeight / 2);
