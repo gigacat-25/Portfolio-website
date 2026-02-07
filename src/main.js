@@ -321,19 +321,17 @@ window.addEventListener('resize', () => {
       resizeBgCanvas();
       initBgParticles();
     } else {
-      // clear canvases if switching to mobile
+      // Mobile: Clear text canvas, but RE-INIT background particles
       const tc = document.getElementById('text-canvas');
-      const bc = document.getElementById('bg-canvas');
       if (tc) {
         const ctx = tc.getContext('2d');
         ctx.clearRect(0, 0, tc.width, tc.height);
       }
-      if (bc) {
-        const ctx = bc.getContext('2d');
-        ctx.clearRect(0, 0, bc.width, bc.height);
-      }
       textParticles = [];
-      bgParticles = [];
+
+      // Re-init BG to handle address bar resize
+      resizeBgCanvas();
+      initBgParticles();
     }
   }, 200);
 });
