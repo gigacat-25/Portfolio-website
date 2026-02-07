@@ -225,6 +225,34 @@ nav.scrolled {
     text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
     /* Strong shadow for readability */
     color: var(--text-primary);
+
+    /* Typewriter init state */
+    display: inline-block;
+    opacity: 1;
+  }
+
+  /* Blinking cursor for typing effect */
+  .typing-cursor::after {
+    content: '_';
+    /* Underscore for terminal look */
+    animation: blink 0.8s step-end infinite;
+    color: var(--accent-primary);
+    margin-left: 2px;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  @keyframes blink {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
   }
 
   #text-canvas {

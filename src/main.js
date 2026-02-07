@@ -311,6 +311,17 @@ window.addEventListener('resize', () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
     if (window.innerWidth >= 768) {
+      // Restore Text for Desktop Particles (fix for resize corruption)
+      const container = document.querySelector('.invisible-text');
+      if (container) {
+        const spans = container.querySelectorAll('span');
+        spans.forEach(s => {
+          if (s.dataset.original) s.innerText = s.dataset.original;
+          s.classList.remove('typing-cursor');
+          s.style.opacity = ''; // Reset opacity style
+        });
+      }
+
       initTextParticles();
       // Resize might need restart of animation if it was stopped, 
       // but simpler to just ensuring they run if they exist.
@@ -337,6 +348,62 @@ window.addEventListener('resize', () => {
     }
   }, 200);
 });
+
+// Typewriter Effect for Mobile
+function playMobileTypewriter() {
+  console.log('Typing...');
+  const container = document.querySelector('.invisible-text');
+  // Check width again to be safe
+  if (!container || window.innerWidth >= 768) return;
+
+  const spans = container.querySelectorAll('span');
+  if (spans.length === 0) return;
+
+  // Clear text initially and store original
+  spans.forEach(s => {
+    s.dataset.original = s.innerText; // Store original text
+    s.innerText = '';
+    s.classList.remove('typing-cursor');
+    // Ensure visibility
+    s.style.opacity = '1';
+  });
+
+  let spanIndex = 0;
+  let charIndex = 0;
+
+  function type() {
+    if (spanIndex >= spans.length) return; // Done
+
+    const currentSpan = spans[spanIndex];
+    // Read from data attribute
+    const currentText = currentSpan.dataset.original || '';
+
+    // Add cursor to current span
+    currentSpan.classList.add('typing-cursor');
+
+    if (charIndex < currentText.length) {
+      currentSpan.innerText += currentText.charAt(charIndex);
+      charIndex++;
+      // Faster typing: 40ms base + random variation
+      setTimeout(type, 40 + Math.random() * 30);
+    } else {
+      // Line finished
+      currentSpan.classList.remove('typing-cursor'); // Remove cursor from finished line
+      spanIndex++;
+      charIndex = 0;
+      setTimeout(type, 200); // Shorter pause between lines
+    }
+  }
+
+  // Start typing with a clear delay so user sees blank screen first
+  setTimeout(type, 500);
+}
+
+// Init Typewriter on Load if Mobile
+if (window.innerWidth < 768) {
+  // Use a small timeout to ensure DOM is ready and prevented flash of full text
+  setTimeout(playMobileTypewriter, 100);
+}
 
 // GitHub Stats Fetcher
 async function fetchGitHubStats() {
