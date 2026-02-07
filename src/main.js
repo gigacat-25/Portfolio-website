@@ -393,39 +393,45 @@ if (window.innerWidth < 768) {
   setTimeout(playMobileTypewriter, 100);
 }
 
+// Helper to animate numbers
+document.documentElement.classList.remove('no-js');
+
+function animateCounter(element, target, duration = 2000) {
+  let startTimestamp = null;
+  const start = 0;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const current = Math.floor(progress * (target - start) + start);
+    element.innerText = current + "+";
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      element.innerText = target + "+";
+    }
+  };
+  window.requestAnimationFrame(step);
+}
+
 // GitHub Stats Fetcher
 async function fetchGitHubStats() {
   try {
     const response = await fetch('https://api.github.com/users/gigacat-25');
     if (!response.ok) throw new Error('GitHub API Failed');
     const data = await response.json();
+    // Use real data
     const repoCount = data.public_repos;
 
     const statEl = document.getElementById('github-stat');
     if (statEl) {
+      // Update attribute for reference
       statEl.setAttribute('data-target', repoCount);
-      // Re-trigger animation for this element if needed, 
-      // or just let the IntersectionObserver catch it if it's currently 0
-      // Since this is async, the observer might have already run.
-      // Let's manually run the animation logic for this one element:
-      let startTimestamp = null;
-      const duration = 2000;
-      const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const current = Math.floor(progress * (repoCount - 0) + 0);
-        statEl.innerText = current + "+";
-        if (progress < 1) {
-          window.requestAnimationFrame(step);
-        } else {
-          statEl.innerText = repoCount + "+";
-        }
-      };
-      window.requestAnimationFrame(step);
+      // Animate from 0 to real number
+      animateCounter(statEl, repoCount);
     }
   } catch (error) {
     console.error('Error fetching GitHub stats:', error);
-    // Fallback or leave as 0+
+    // On error, we silently fail and keep the hardcoded default (15+)
   }
 }
 
@@ -438,28 +444,16 @@ async function fetchGitHubContributions() {
 
     let total = 0;
     if (data.total) {
-      // Sum up contributions from all years returned by the API
+      // Sum up contributions from all years
       total = Object.values(data.total).reduce((acc, curr) => acc + curr, 0);
     }
 
     const statEl = document.getElementById('github-contrib-stat');
-    if (statEl && total > 0) {
+    if (statEl) {
+      // Update attribute
       statEl.setAttribute('data-target', total);
-      // Animate manually
-      let startTimestamp = null;
-      const duration = 2000;
-      const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const current = Math.floor(progress * (total - 0) + 0);
-        statEl.innerText = current + "+";
-        if (progress < 1) {
-          window.requestAnimationFrame(step);
-        } else {
-          statEl.innerText = total + "+";
-        }
-      };
-      window.requestAnimationFrame(step);
+      // Animate from 0 to real number
+      animateCounter(statEl, total);
     }
   } catch (error) {
     console.error('Error fetching GitHub contribs:', error);

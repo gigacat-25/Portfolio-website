@@ -201,6 +201,29 @@ nav.scrolled {
   pointer-events: none;
   /* Reduced margin to fit everything */
   margin-bottom: 0.5rem;
+  /* Accessibility: Ensure it occupies space and is readable by screen readers */
+  position: relative;
+  z-index: 1;
+}
+
+/* Fallback: If JS fails (or particles don't load), show text */
+html.no-js .invisible-text {
+  opacity: 1;
+  color: var(--text-color);
+}
+
+.social-icon {
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-icon:hover {
+  color: var(--accent-color);
+  transform: translateY(-3px);
+  filter: drop-shadow(0 0 8px rgba(0, 242, 234, 0.4));
 }
 
 @media (max-width: 768px) {
