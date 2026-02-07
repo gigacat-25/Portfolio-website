@@ -311,17 +311,6 @@ window.addEventListener('resize', () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
     if (window.innerWidth >= 768) {
-      // Restore Text for Desktop Particles (fix for resize corruption)
-      const container = document.querySelector('.invisible-text');
-      if (container) {
-        const spans = container.querySelectorAll('span');
-        spans.forEach(s => {
-          if (s.dataset.original) s.innerText = s.dataset.original;
-          s.classList.remove('typing-cursor');
-          s.style.opacity = ''; // Reset opacity style
-        });
-      }
-
       initTextParticles();
       // Resize might need restart of animation if it was stopped, 
       // but simpler to just ensuring they run if they exist.
@@ -359,9 +348,11 @@ function playMobileTypewriter() {
   const spans = container.querySelectorAll('span');
   if (spans.length === 0) return;
 
-  // Clear text initially and store original
+  // Store original text
+  const texts = Array.from(spans).map(s => s.innerText);
+
+  // Clear text initially
   spans.forEach(s => {
-    s.dataset.original = s.innerText; // Store original text
     s.innerText = '';
     s.classList.remove('typing-cursor');
     // Ensure visibility
@@ -375,8 +366,7 @@ function playMobileTypewriter() {
     if (spanIndex >= spans.length) return; // Done
 
     const currentSpan = spans[spanIndex];
-    // Read from data attribute
-    const currentText = currentSpan.dataset.original || '';
+    const currentText = texts[spanIndex];
 
     // Add cursor to current span
     currentSpan.classList.add('typing-cursor');
@@ -384,19 +374,19 @@ function playMobileTypewriter() {
     if (charIndex < currentText.length) {
       currentSpan.innerText += currentText.charAt(charIndex);
       charIndex++;
-      // Faster typing: 40ms base + random variation
-      setTimeout(type, 40 + Math.random() * 30);
+      // Slower typing: 100ms base + random variation
+      setTimeout(type, 100 + Math.random() * 50);
     } else {
       // Line finished
       currentSpan.classList.remove('typing-cursor'); // Remove cursor from finished line
       spanIndex++;
       charIndex = 0;
-      setTimeout(type, 200); // Shorter pause between lines
+      setTimeout(type, 400); // Pause between lines
     }
   }
 
   // Start typing with a clear delay so user sees blank screen first
-  setTimeout(type, 500);
+  setTimeout(type, 800);
 }
 
 // Init Typewriter on Load if Mobile
