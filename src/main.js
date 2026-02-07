@@ -413,13 +413,15 @@ async function fetchGitHubContributions() {
 
 // Wait for fonts to be ready so text measurements are correct
 document.fonts.ready.then(() => {
-  // Only init particles on desktop
+  // Text particles only on desktop
   if (window.innerWidth >= 768) {
     initTextParticles();
     animateTextParticles();
-    initBgParticles();
-    animateBgParticles();
   }
+
+  // Background particles everywhere
+  initBgParticles();
+  animateBgParticles();
 
   // Fetch GitHub Stats
   fetchGitHubStats();
@@ -581,14 +583,4 @@ gsap.utils.toArray('.stat-number').forEach(stat => {
   });
 });
 
-// Animate the text item (Cloud & Net) simply fading in
-gsap.from(".stat-text", {
-  opacity: 0,
-  y: 20,
-  duration: 1,
-  delay: 0.5,
-  scrollTrigger: {
-    trigger: "#stats",
-    start: "top 80%",
-  }
-});
+

@@ -205,24 +205,44 @@ nav.scrolled {
 
 @media (max-width: 768px) {
   .invisible-text {
+    display: flex;
+    /* Restore for static text */
+    flex-direction: column;
     opacity: 1;
-    /* Show text */
-    pointer-events: auto;
+    /* Make visible */
+    pointer-events: none;
+    /* Let clicks pass */
     margin-bottom: 2rem;
-    /* Extra space on mobile to prevent overlap from particle spread */
+    position: relative;
+    z-index: 2;
+    /* Above particles */
   }
 
-  #text-canvas,
-  #bg-canvas {
+  .invisible-text span {
+    font-size: 2.5rem;
+    /* Slightly smaller for mobile if needed */
+    line-height: 1.1;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    /* Strong shadow for readability */
+    color: var(--text-primary);
+  }
+
+  #text-canvas {
     display: none;
-    /* Hide particles */
+  }
+
+  #bg-canvas {
+    display: block;
+    /* Show background particles */
   }
 
   .hero-section {
     padding-top: 100px;
     /* More top padding for mobile */
-    justify-content: flex-start;
-    /* Align to top to avoid bottom squash */
+    justify-content: center;
+    /* Center content since text is gone */
+    min-height: 80vh;
+    /* Adjust height */
   }
 }
 
