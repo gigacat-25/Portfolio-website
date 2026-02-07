@@ -372,8 +372,8 @@ function playMobileTypewriter() {
     if (charIndex < currentText.length) {
       currentSpan.innerText += currentText.charAt(charIndex);
       charIndex++;
-      // Slower typing: 100ms base + random variation
-      setTimeout(type, 100 + Math.random() * 50);
+      // Faster typing: 40ms base + random variation
+      setTimeout(type, 40 + Math.random() * 30);
     } else {
       // Line finished
       currentSpan.classList.remove('typing-cursor'); // Remove cursor from finished line
@@ -383,8 +383,8 @@ function playMobileTypewriter() {
     }
   }
 
-  // Start typing with a clear delay so user sees blank screen first
-  setTimeout(type, 800);
+  // Start typing quickly
+  setTimeout(type, 200);
 }
 
 // Init Typewriter on Load if Mobile
