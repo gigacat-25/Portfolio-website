@@ -523,10 +523,24 @@ html.no-js .invisible-text {
 }
 
 /* Skills */
+.skill-category {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.category-title {
+  margin-bottom: 1.25rem;
+  color: var(--text-color);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
 .skills-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  justify-content: center;
 }
 
 .skill-tag {

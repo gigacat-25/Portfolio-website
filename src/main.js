@@ -571,10 +571,10 @@ gsap.fromTo(".skill-tag",
     duration: 0.4,
     ease: "back.out(1.7)", // "Snap" effect
     scrollTrigger: {
-      trigger: ".skills-grid",
-      start: "top 85%",
-      end: "bottom 20%",
-      toggleActions: "play reverse play reverse" // Disappear on leave, Reappear on return
+      trigger: "#skills",
+      start: "top 90%", // Start animating much earlier as soon as it enters viewport
+      end: "bottom 10%",
+      toggleActions: "play reverse play reverse"
     }
   }
 );
